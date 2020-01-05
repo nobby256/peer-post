@@ -1,0 +1,47 @@
+server:
+  servlet:
+    context-path: /peer-post/api
+
+spring:
+  datasource:
+    url:                 jdbc:mysql://localhost/mattermost?serverTimezone=JST
+    username:            root
+    password:            password
+    driver-class-name:   com.mysql.cj.jdbc.Driver
+
+mattermost:
+  url:          http://localhost:8065
+  access_token: 5xsqs3tpqjggdxksc3kmyigjxy
+
+peer-post:
+  channel_name: town-square
+  hashtags:
+              - ベイジ流-プロフェッショナルは行動主義である
+              - ベイジ流-プロフェッショナルは論理的である
+              - ベイジ流-プロフェッショナルは自責型である
+              - ベイジ流-プロフェッショナルはリーダーシップがある
+              - ベイジ流-プロフェッショナルはスキルアップし続ける
+              - ベイジ流-プロフェッショナルは気が利く
+              - ベイジ流-プロフェッショナルはユーザ志向である
+              - アセナビ流-価値を生み出そう
+              - アセナビ流-共有しよう
+              - アセナビ流-プロフェッショナルであろう
+              - アセナビ流-常に前のめりであろう
+              - メルカリ流-大胆にやろう
+              - メルカリ流-全ては成功のために
+              - メルカリ流-プロフェッショナルであれ
+              - freee流-本質的(マジ)で価値ある
+              - freee流-理想ドリブン
+              - freee流-アウトプット→思考
+              - freee流-HackEverything
+              - freee流-あえて、共有する
+              - ニアショア流-Challenge
+              - ニアショア流-Commitment
+              - ニアショア流-Communication
+              - UZABASE流-自由主義でいこう
+              - UZABASE流-創造性がなければ意味がない
+              - UZABASE流-ユーザーの理想から始める
+              - UZABASE流-スピードで驚かす
+              - UZABASE流-迷ったら挑戦する道を選ぶ
+              - UZABASE流-渦中の友を助ける
+              - UZABASE流-異能は才能
