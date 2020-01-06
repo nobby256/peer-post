@@ -36,6 +36,7 @@ import net.bis5.mattermost.model.PostList;
 import net.bis5.mattermost.model.Reaction;
 import net.bis5.mattermost.model.ReactionList;
 import net.bis5.mattermost.model.SlackAttachment;
+import net.bis5.mattermost.model.SlackAttachmentField;
 import net.bis5.mattermost.model.User;
 
 @Transactional(rollbackFor = Exception.class)
@@ -152,7 +153,11 @@ public class PeerReportCommand {
 		//===========================================
 		//レポート出力
 		//==========
-		String report;
+		String reportTo;
+		String reportFrom;
+		String reportReaction;
+		String reportHashTag;
+
 		{
 			//昇順でソートする
 			List<Pair<String, Integer>> toList = sortCountMap(toCountMap);
@@ -160,43 +165,47 @@ public class PeerReportCommand {
 			List<Pair<String, Integer>> reactionList = sortCountMap(reactionCountMap);
 			List<Pair<String, Integer>> hashTagList = sortCountMap(hashTagCountMap);
 
-			StringBuilder builder = new StringBuilder();
-			builder.append("褒められた回数\n\n");
+			StringBuilder builder;
+
+			//褒められた回数
+			builder = new StringBuilder();
 			builder.append("| 名前 | 回数 |\n");
 			builder.append("| :--- | ---: |\n");
 			for (Pair<String, Integer> pair : toList) {
 				String displayName = displayNameMap.get(pair.getKey());
 				builder.append("|" + displayName + "|" + pair.getValue() + "|\n");
 			}
+			reportTo = builder.toString();
 
-			builder.append("\n\n");
-			builder.append("褒めた回数\n\n");
+			//褒めた回数
+			builder = new StringBuilder();
 			builder.append("| 名前 | 回数 |\n");
 			builder.append("| :--- | ---: |\n");
 			for (Pair<String, Integer> pair : fromList) {
 				String displayName = displayNameMap.get(pair.getKey());
 				builder.append("|" + displayName + "|" + pair.getValue() + "|\n");
 			}
+			reportFrom = builder.toString();
 
-			builder.append("\n\n");
-			builder.append("リアクション回数\n\n");
+			//リアクション回数
+			builder = new StringBuilder();
 			builder.append("| 名前 | 回数 |\n");
 			builder.append("| :--- | ---: |\n");
 			for (Pair<String, Integer> pair : reactionList) {
 				String displayName = displayNameMap.get(pair.getKey());
 				builder.append("|" + displayName + "|" + pair.getValue() + "|\n");
 			}
+			reportReaction = builder.toString();
 
-			builder.append("\n\n");
-			builder.append("ハッシュタグ使用回数\n\n");
+			//ハッシュタグ使用回数
+			builder = new StringBuilder();
 			builder.append("| ハッシュタグ | 回数 |\n");
 			builder.append("| :--- | ---: |\n");
 			for (Pair<String, Integer> pair : hashTagList) {
 				String hashTag = pair.getKey();
 				builder.append("|" + hashTag + "|" + pair.getValue() + "|\n");
 			}
-
-			report = builder.toString();
+			reportHashTag = builder.toString();
 		}
 
 		CommandResponse response = new CommandResponse();
@@ -222,10 +231,35 @@ public class PeerReportCommand {
 					String title = String.format("ピア投稿ランキング  [%s ～ %s]", formatter.format(fromDate), formatter.format(new Date()));
 					attach.setTitle(title);
 				}
-				//本文
-				{
-					attach.setText(report);
-				}
+
+				List<SlackAttachmentField> fields = new ArrayList<>();
+				attach.setFields(fields);
+
+				SlackAttachmentField field;
+
+				field = new SlackAttachmentField();
+				fields.add(field);
+				field.setTitle("ほめられた回数");
+				field.setShortField(true);
+				field.setValue(reportTo);
+
+				field = new SlackAttachmentField();
+				fields.add(field);
+				field.setTitle("ほめた回数");
+				field.setShortField(true);
+				field.setValue(reportFrom);
+
+				field = new SlackAttachmentField();
+				fields.add(field);
+				field.setTitle("リアクション回数");
+				field.setShortField(true);
+				field.setValue(reportReaction);
+
+				field = new SlackAttachmentField();
+				fields.add(field);
+				field.setTitle("ハッシュタグ使用回数");
+				field.setShortField(true);
+				field.setValue(reportHashTag);
 			}
 		}
 
