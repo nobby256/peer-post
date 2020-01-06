@@ -35,6 +35,7 @@ import net.bis5.mattermost.model.Post;
 import net.bis5.mattermost.model.PostList;
 import net.bis5.mattermost.model.Reaction;
 import net.bis5.mattermost.model.ReactionList;
+import net.bis5.mattermost.model.SlackAttachment;
 import net.bis5.mattermost.model.User;
 
 @Transactional(rollbackFor = Exception.class)
@@ -160,10 +161,7 @@ public class PeerReportCommand {
 			List<Pair<String, Integer>> hashTagList = sortCountMap(hashTagCountMap);
 
 			StringBuilder builder = new StringBuilder();
-			String title = String.format("## ピア投稿ランキング %s～", new SimpleDateFormat("yyyy/MM/dd").format(fromDate));
-
-			builder.append(title).append("\n\n");
-			builder.append("褒められた人\n\n");
+			builder.append("褒められた回数\n\n");
 			builder.append("| 名前 | 回数 |\n");
 			builder.append("| :--- | ---: |\n");
 			for (Pair<String, Integer> pair : toList) {
@@ -172,7 +170,7 @@ public class PeerReportCommand {
 			}
 
 			builder.append("\n\n");
-			builder.append("褒めた人\n\n");
+			builder.append("褒めた回数\n\n");
 			builder.append("| 名前 | 回数 |\n");
 			builder.append("| :--- | ---: |\n");
 			for (Pair<String, Integer> pair : fromList) {
@@ -181,7 +179,7 @@ public class PeerReportCommand {
 			}
 
 			builder.append("\n\n");
-			builder.append("リアクションした人\n\n");
+			builder.append("リアクション回数\n\n");
 			builder.append("| 名前 | 回数 |\n");
 			builder.append("| :--- | ---: |\n");
 			for (Pair<String, Integer> pair : reactionList) {
@@ -190,7 +188,7 @@ public class PeerReportCommand {
 			}
 
 			builder.append("\n\n");
-			builder.append("人気ハッシュタグ\n\n");
+			builder.append("ハッシュタグ使用回数\n\n");
 			builder.append("| ハッシュタグ | 回数 |\n");
 			builder.append("| :--- | ---: |\n");
 			for (Pair<String, Integer> pair : hashTagList) {
@@ -202,12 +200,34 @@ public class PeerReportCommand {
 		}
 
 		CommandResponse response = new CommandResponse();
-		response.setResponseType(CommandResponseType.Ephemeral);
-		response.setChannelId(request.getChannelId());
-		User botUser = client.getMe().readEntity();
-		response.setUsername(helper.getDisplayName(botUser));
-		response.setIconUrl(client.getUserProfileImageUrl(botUser.getId()));
-		response.setText(report);
+		{
+			response.setResponseType(CommandResponseType.Ephemeral);
+			response.setChannelId(request.getChannelId());
+			User botUser = client.getMe().readEntity();
+			response.setUsername(helper.getDisplayName(botUser));
+			response.setIconUrl(client.getUserProfileImageUrl(botUser.getId()));
+
+			List<SlackAttachment> attachments = new ArrayList<SlackAttachment>();
+			response.setAttachments(attachments);
+			//===========================================
+			//アタッチメント
+			//==========
+			{
+				SlackAttachment attach = new SlackAttachment();
+				attachments.add(attach);
+
+				//タイトル
+				{
+					SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+					String title = String.format("ピア投稿ランキング  [%s ～ %s]", formatter.format(fromDate), formatter.format(new Date()));
+					attach.setTitle(title);
+				}
+				//本文
+				{
+					attach.setText(report);
+				}
+			}
+		}
 
 		return response;
 	}
