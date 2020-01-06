@@ -4,7 +4,6 @@ import java.util.logging.Level;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,10 +45,6 @@ public class MatterMostHelper {
 
 	public MattermostClientEx getClient() {
 		return getClient(true);
-	}
-
-	public ApiResponse<Boolean> postByIncomingWebhook(IncomingWebhookRequest payload) {
-		throw new NotImplementedException("postByIncomingWebhook(IncomingWebhookRequest payload)は未実装です");
 	}
 
 	public ApiResponse<Boolean> postByIncomingWebhook(String url, IncomingWebhookRequest payload) {

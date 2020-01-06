@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.nobby256.mattermost.client4.MattermostClientEx;
 import com.github.nobby256.mattermost.client4.model.CommandRequest;
 import com.github.nobby256.mattermost.client4.model.Dialog;
+import com.github.nobby256.mattermost.client4.model.Dialog.Element;
+import com.github.nobby256.mattermost.client4.model.Dialog.Element.ElementType;
+import com.github.nobby256.mattermost.client4.model.Dialog.Element.Option;
 import com.github.nobby256.mattermost.client4.model.DialogRequest;
 import com.github.nobby256.mattermost.client4.model.DialogSubmissionRequest;
 import com.github.nobby256.mattermost.client4.model.DialogSubmissionResponse;
 import com.github.nobby256.mattermost.client4.model.SubmissionMap;
-import com.github.nobby256.mattermost.client4.model.Dialog.Element;
-import com.github.nobby256.mattermost.client4.model.Dialog.Element.ElementType;
-import com.github.nobby256.mattermost.client4.model.Dialog.Element.Option;
 import com.github.nobby256.peerpost.config.AppProperties;
 import com.github.nobby256.peerpost.dao.MattermostDao;
 import com.github.nobby256.peerpost.helper.MatterMostHelper;
@@ -39,7 +39,7 @@ import net.bis5.mattermost.model.UserList;
 @Transactional(rollbackFor = Exception.class)
 @RestController
 @RequestMapping("/peer")
-public class PeerPointController {
+public class PeerPostController {
 
 	private static final String USAGE = "** ピア投稿 Slash Command Help **\n\n  /peer @ユーザ名\n\n  - 複数人を指すメンションは指定できません。（ex: @all, @channel, @here）\n\n  - チーム内のメンバーのみ指定できます。";
 
@@ -151,7 +151,7 @@ public class PeerPointController {
 			hashList.add(hashtag2);
 		}
 		if (StringUtils.isNotBlank(hashtag3)) {
-			if(!hashtag3.startsWith("#")) {
+			if (!hashtag3.startsWith("#")) {
 				hashtag3 = "#" + hashtag3;
 			}
 			hashList.add(hashtag3);
@@ -204,6 +204,15 @@ public class PeerPointController {
 				//==========
 				{
 					attach.setThumbUrl(stamp);
+				}
+			}
+			//===========================================
+			//プロパティの追加（集計に利用）
+			//==========
+			{
+				propMap.put("peer-post", postUser.getId() + ":" + targetUser.getId());
+				if (StringUtils.isNotBlank(hashtag)) {
+					propMap.put("peer-post-hashtags", hashtag);
 				}
 			}
 
@@ -259,17 +268,17 @@ public class PeerPointController {
 		fillStampOptions(elm.getOptions());
 
 		//チームハッシュタグ１
-		elm = dialog.addElement(ElementType.select, "褒める理由（行動指針・VALUE）", HASHTAG_1);
+		elm = dialog.addElement(ElementType.select, "チームハッシュタグ", HASHTAG_1);
 		elm.setOptional(true);
 		elm.getOptions().addAll(hashTagOptionList);
 
 		//チームハッシュタグ２
-		elm = dialog.addElement(ElementType.select, "褒める理由（行動指針・VALUE）", HASHTAG_2);
+		elm = dialog.addElement(ElementType.select, "チームハッシュタグ", HASHTAG_2);
 		elm.setOptional(true);
 		elm.getOptions().addAll(hashTagOptionList);
 
 		//チームハッシュタグ３
-		elm = dialog.addElement(ElementType.text, "褒める理由（自由に一言）", HASHTAG_3);
+		elm = dialog.addElement(ElementType.text, "チームハッシュタグ（あなたのオリジナル）", HASHTAG_3);
 		elm.setOptional(true);
 		elm.setMinLength(0);
 		elm.setMaxLength(30);
