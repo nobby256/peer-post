@@ -1,10 +1,10 @@
-package com.github.nobby256.peerpost.helper.model;
+package com.github.nobby256.mattermost.client4.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.nobby256.peerpost.helper.model.Dialog.Element.ElementType;
+import com.github.nobby256.mattermost.client4.model.Dialog.Element.ElementType;
 
 import lombok.Data;
 import lombok.Getter;

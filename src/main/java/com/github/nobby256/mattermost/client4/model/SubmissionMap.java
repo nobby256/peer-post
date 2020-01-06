@@ -1,4 +1,4 @@
-package com.github.nobby256.peerpost.helper.model;
+package com.github.nobby256.mattermost.client4.model;
 
 import java.math.BigDecimal;
 import java.util.HashMap;

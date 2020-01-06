@@ -1,9 +1,9 @@
-package com.github.nobby256.peerpost.helper;
+package com.github.nobby256.mattermost.client4;
 
 import java.util.logging.Level;
 
-import com.github.nobby256.peerpost.helper.model.DialogRequest;
-import com.github.nobby256.peerpost.helper.model.DialogResponse;
+import com.github.nobby256.mattermost.client4.model.DialogRequest;
+import com.github.nobby256.mattermost.client4.model.DialogResponse;
 
 import net.bis5.mattermost.client4.ApiResponse;
 import net.bis5.mattermost.client4.MattermostClient;

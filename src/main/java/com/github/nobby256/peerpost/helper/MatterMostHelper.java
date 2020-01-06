@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.github.nobby256.mattermost.client4.MattermostClientEx;
 import com.github.nobby256.peerpost.config.MattermostProperties;
 
 import net.bis5.mattermost.client4.ApiResponse;
